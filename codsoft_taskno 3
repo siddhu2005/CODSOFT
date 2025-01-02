@@ -1,0 +1,81 @@
+import random
+import string
+
+class CustomPasswordGenerator:
+    def __init__(self):
+        self.character_sets = {
+            "lowercase": string.ascii_lowercase,
+            "uppercase": string.ascii_uppercase,
+            "digits": string.digits,
+            "symbols": "!@#$%^&*()_-+=<>?/|~"
+        }
+
+    def create_password(self, length, options):
+        if length < len(options):
+            return "Error: Password length must be at least equal to the number of selected options."
+
+        # Ensure at least one character from each selected type
+        password_core = [random.choice(self.character_sets[opt]) for opt in options]
+
+        # Add additional characters to meet length requirement
+        all_selected_chars = ''.join(self.character_sets[opt] for opt in options)
+        additional_chars = random.choices(all_selected_chars, k=length - len(password_core))
+
+        # Combine core and additional characters, then shuffle
+        password = password_core + additional_chars
+        random.shuffle(password)
+        return ''.join(password)
+
+    def get_user_options(self):
+        print("Select the types of characters to include in your password:")
+        print("1. Lowercase letters (a-z)")
+        print("2. Uppercase letters (A-Z)")
+        print("3. Numbers (0-9)")
+        print("4. Symbols (!@#$%^&* etc.)")
+        
+        selected_options = []
+        option_mapping = {
+            "1": "lowercase",
+            "2": "uppercase",
+            "3": "digits",
+            "4": "symbols"
+        }
+        
+        choices = input("Enter your choices (e.g., 1,3,4): ").split(",")
+        for choice in choices:
+            option = option_mapping.get(choice.strip())
+            if option:
+                selected_options.append(option)
+        
+        if not selected_options:
+            print("No valid options selected. Defaulting to all character types.")
+            selected_options = list(option_mapping.values())
+        
+        return selected_options
+
+    def menu(self):
+        print("Welcome to the Unique Password Generator!")
+        while True:
+            print("\nOptions:")
+            print("1. Generate a password")
+            print("2. Exit")
+            user_choice = input("Enter your choice: ")
+
+            if user_choice == "1":
+                try:
+                    length = int(input("Enter the desired password length: "))
+                    selected_options = self.get_user_options()
+                    password = self.create_password(length, selected_options)
+                    print(f"Your generated password: {password}")
+                except ValueError:
+                    print("Invalid input. Please enter numeric values where required.")
+            elif user_choice == "2":
+                print("Thank you for using the Password Generator. Goodbye!")
+                break
+            else:
+                print("Invalid choice. Please try again.")
+
+# Start the program
+if __name__ == "__main__":
+    generator = CustomPasswordGenerator()
+    generator.menu()
