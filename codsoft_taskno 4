@@ -1,0 +1,62 @@
+import random
+
+class RockPaperScissors:
+    def __init__(self):
+        self.choices = ["rock", "paper", "scissors"]
+        self.result_matrix = {
+            ("rock", "scissors"): "win",
+            ("scissors", "paper"): "win",
+            ("paper", "rock"): "win",
+            ("scissors", "rock"): "lose",
+            ("paper", "scissors"): "lose",
+            ("rock", "paper"): "lose",
+        }
+
+    def get_computer_choice(self):
+        return random.choice(self.choices)
+
+    def determine_winner(self, player_choice, computer_choice):
+        if player_choice == computer_choice:
+            return "draw"
+        return self.result_matrix.get((player_choice, computer_choice), "lose")
+
+    def menu(self):
+        print("Welcome to Rock-Paper-Scissors!")
+        print("Rules:")
+        print("- Rock beats Scissors")
+        print("- Scissors beats Paper")
+        print("- Paper beats Rock")
+        
+        while True:
+            print("\nOptions:")
+            print("1. Play")
+            print("2. Exit")
+            choice = input("Enter your choice: ")
+
+            if choice == "1":
+                player_choice = input("Choose Rock, Paper, or Scissors: ").strip().lower()
+                if player_choice not in self.choices:
+                    print("Invalid choice. Please select Rock, Paper, or Scissors.")
+                    continue
+
+                computer_choice = self.get_computer_choice()
+                print(f"You chose: {player_choice}")
+                print(f"Computer chose: {computer_choice}")
+
+                result = self.determine_winner(player_choice, computer_choice)
+                if result == "win":
+                    print("You win! ")
+                elif result == "lose":
+                    print("You lose! ")
+                else:
+                    print("It's a draw! ")
+            elif choice == "2":
+                print("Thank you for playing Rock-Paper-Scissors. Goodbye!")
+                break
+            else:
+                print("Invalid option. Please try again.")
+
+# Run the game
+if __name__ == "__main__":
+    game = RockPaperScissors()
+    game.menu()
